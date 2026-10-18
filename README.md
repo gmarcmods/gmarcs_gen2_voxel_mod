@@ -38,7 +38,7 @@ Version 0.1.32 keeps camera look live during conversations/Yes-No in 1ST and
 in both house atlases, and improves Kanto cliffs, domed boundary rocks, fence
 rails and Nugget Bridge supports. All 431 prior asset IDs are retained; 429
 unrelated assets are unchanged and one bridge model is added (432 total).
-Runtime 1.10.23 is materialized into the exported ZIP.
+Runtime 1.10.24 is materialized into the exported ZIP.
 
 Version 0.1.33 rebuilds the Pokémon Center counter with a clean low worktop
 and horizontal six-slot healing machine. Native healing balls now appear in
@@ -49,3 +49,7 @@ are added (434 total).
 
 Version 0.1.34 fixes stair atlas bleeding and stretched tread texture bands.
 Stair heights, directions and all authored geometry are unchanged.
+
+Version 0.1.35 adds rounded Whirl Island formations and asymmetric coastal
+sea-rock clusters, with native cave access, collisions and animated water
+preserved. All 434 previous authored assets are unchanged (441 total).
