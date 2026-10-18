@@ -1,6 +1,6 @@
 # Complete authored Gen 2 voxel project
 
-Install NEW_MOD_EX.zip. This project contains all 392 original authored assets plus the native Ilex cut-tree and two small sea-rock models; runtime
+Install NEW_MOD_EX.zip. This project contains all 392 original authored assets plus the native Ilex cut-tree, two sea-rock models and eighteen mall fixture patterns; runtime
 code is shared through relative links to ../voxel-runtime. Never replace its
 data/voxel_heights.lua with the runtime's minimal fallback.
 
@@ -23,3 +23,7 @@ footprints and keeps the north and west entrance cells open.
 
 Version 0.1.21 makes the small Johto sea rocks solid, rounded and low,
 with animated water beneath them. All 393 previous assets are retained.
+
+Version 0.1.22 rebuilds department-store shelves, displays, seating, counters,
+windows, elevator fixtures and basement crates. All 395 previous assets are
+retained; eighteen additional fixture patterns bring the total to 413.
