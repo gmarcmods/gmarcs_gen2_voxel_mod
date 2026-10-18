@@ -53,3 +53,10 @@ Stair heights, directions and all authored geometry are unchanged.
 Version 0.1.35 adds rounded Whirl Island formations and asymmetric coastal
 sea-rock clusters, with native cave access, collisions and animated water
 preserved. All 434 previous authored assets are unchanged (441 total).
+
+Version **0.1.36** uses runtime 1.10.25 for coherent native cave rock sides,
+upright ladders, recessed downward shafts and matching landing heights.
+The native warp cells and all 441 authored assets are preserved. Install
+Johto in First Person **1.0.6** separately for the corresponding optional
+cave enclosure/camera-clearance repair. Native 3D belongs here; added
+presentation stays in JIFP. See ../voxel-runtime/docs/cave-interiors.md.
