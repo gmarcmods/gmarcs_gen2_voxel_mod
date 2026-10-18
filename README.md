@@ -31,3 +31,11 @@ retained; eighteen additional fixture patterns bring the total to 413.
 Version 0.1.23 details Goldenrod’s tower facade, dishes and antenna lattice,
 and both Radio Tower interiors’ desks, phones, CRTs, studio equipment, drawers
 and framed glass. Fourteen reception modules bring the inventory to 427.
+
+
+Version 0.1.32 keeps camera look live during conversations/Yes-No in 1ST and
+3RD, removes their experimental labels, repairs table/desk floor footprints
+in both house atlases, and improves Kanto cliffs, domed boundary rocks, fence
+rails and Nugget Bridge supports. All 431 prior asset IDs are retained; 429
+unrelated assets are unchanged and one bridge model is added (432 total).
+Runtime 1.10.21 is materialized into the exported ZIP.
