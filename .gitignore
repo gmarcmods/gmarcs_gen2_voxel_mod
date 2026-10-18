@@ -1,0 +1,4 @@
+# Recovery snapshots and editor scratch remain local.
+data/*.bak*
+data/painter_out
+*.log
