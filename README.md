@@ -1,6 +1,6 @@
 # Complete authored Gen 2 voxel project
 
-Install NEW_MOD_EX.zip. This project contains all 392 original authored assets plus the native Ilex cut-tree model; runtime
+Install NEW_MOD_EX.zip. This project contains all 392 original authored assets plus the native Ilex cut-tree and two small sea-rock models; runtime
 code is shared through relative links to ../voxel-runtime. Never replace its
 data/voxel_heights.lua with the runtime's minimal fallback.
 
@@ -20,3 +20,6 @@ Runtime 1.10.12 adds bounded native cave rock detail without editing collision.
 
 Version 0.1.20 aligns both Ilex gatehouse hulls with their native collision
 footprints and keeps the north and west entrance cells open.
+
+Version 0.1.21 makes the small Johto sea rocks solid, rounded and low,
+with animated water beneath them. All 393 previous assets are retained.
