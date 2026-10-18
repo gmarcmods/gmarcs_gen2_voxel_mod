@@ -27,3 +27,7 @@ with animated water beneath them. All 393 previous assets are retained.
 Version 0.1.22 rebuilds department-store shelves, displays, seating, counters,
 windows, elevator fixtures and basement crates. All 395 previous assets are
 retained; eighteen additional fixture patterns bring the total to 413.
+
+Version 0.1.23 details Goldenrod’s tower facade, dishes and antenna lattice,
+and both Radio Tower interiors’ desks, phones, CRTs, studio equipment, drawers
+and framed glass. Fourteen reception modules bring the inventory to 427.

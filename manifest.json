@@ -16,7 +16,7 @@
     "gen2"
   ],
   "dependencies": [],
-  "version": "0.1.22",
+  "version": "0.1.23",
   "entry": "main.lua",
   "profile": "content"
 }
