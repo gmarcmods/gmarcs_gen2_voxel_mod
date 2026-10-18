@@ -17,3 +17,6 @@ Package from the workspace root with scripts/export-mods.py NEW_MOD_EX.
 Version 0.1.19 rebuilds Kurt’s tables, cabinets and workbench tools, rounds the
 Slowpoke Well entrance, and models Ilex’s native cut tree and outer tree ring.
 Runtime 1.10.12 adds bounded native cave rock detail without editing collision.
+
+Version 0.1.20 aligns both Ilex gatehouse hulls with their native collision
+footprints and keeps the north and west entrance cells open.
