@@ -38,4 +38,11 @@ Version 0.1.32 keeps camera look live during conversations/Yes-No in 1ST and
 in both house atlases, and improves Kanto cliffs, domed boundary rocks, fence
 rails and Nugget Bridge supports. All 431 prior asset IDs are retained; 429
 unrelated assets are unchanged and one bridge model is added (432 total).
-Runtime 1.10.21 is materialized into the exported ZIP.
+Runtime 1.10.22 is materialized into the exported ZIP.
+
+Version 0.1.33 rebuilds the Pokémon Center counter with a clean low worktop
+and horizontal six-slot healing machine. Native healing balls now appear in
+the tray as solid geometry and stay there as the camera moves. Tested on
+Gold, Silver and Crystal desktop. All 432 previous authored assets remain;
+425 are unchanged, seven station assets are repaired and two counter infills
+are added (434 total).
