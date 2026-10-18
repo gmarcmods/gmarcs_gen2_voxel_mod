@@ -1,0 +1,22 @@
+{
+  "name": "new_mod_ex",
+  "managed_by_editor": true,
+  "optional_dependencies": [],
+  "affects_link": false,
+  "api": 2,
+  "category": "GRAPHICS",
+  "priority": 100,
+  "conflicts": [],
+  "permissions": [
+    "engine_internals"
+  ],
+  "description": "Voxel mod created by the editor.",
+  "id": "NEW_MOD_EX",
+  "games": [
+    "gen2"
+  ],
+  "dependencies": [],
+  "version": "0.1.16",
+  "entry": "main.lua",
+  "profile": "content"
+}
