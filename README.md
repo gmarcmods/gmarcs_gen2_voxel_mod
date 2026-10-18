@@ -1,6 +1,6 @@
 # Complete authored Gen 2 voxel project
 
-Install NEW_MOD_EX.zip. This project contains all 392 authored assets; runtime
+Install NEW_MOD_EX.zip. This project contains all 392 original authored assets plus the native Ilex cut-tree model; runtime
 code is shared through relative links to ../voxel-runtime. Never replace its
 data/voxel_heights.lua with the runtime's minimal fallback.
 
@@ -13,3 +13,7 @@ Validation and migration tools live in ../voxel-runtime/tests and tools.
 Run test_detail_repairs.lua from that repository (or by its full path) to
 compare unrelated authored assets against the 0.1.16 recovery baseline.
 Package from the workspace root with scripts/export-mods.py NEW_MOD_EX.
+
+Version 0.1.19 rebuilds Kurt’s tables, cabinets and workbench tools, rounds the
+Slowpoke Well entrance, and models Ilex’s native cut tree and outer tree ring.
+Runtime 1.10.12 adds bounded native cave rock detail without editing collision.
