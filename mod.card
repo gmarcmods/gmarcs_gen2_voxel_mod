@@ -1,0 +1,8 @@
+return {
+  summary   = "3D voxel overworld for Gen 2 (Gold/Silver/Crystal).",
+  author    = "gmarcs",
+  tags      = { "graphics", "3d", "overhaul" },
+  differences = { changed = {}, added = {}, known = {} },
+  credits   = {},
+  compat    = { engine = ">=1.0.0 <2.0.0", modApi = 2 },
+}
