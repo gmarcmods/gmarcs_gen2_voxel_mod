@@ -1,5 +1,5 @@
 {
-  "name": "new_mod_ex",
+  "name": "gmarcs_gen2_voxel_mod",
   "managed_by_editor": true,
   "optional_dependencies": [],
   "affects_link": false,
@@ -11,12 +11,13 @@
     "engine_internals"
   ],
   "description": "Voxel mod created by the editor.",
-  "id": "NEW_MOD_EX",
+  "id": "gmarcs_gen2_voxel_mod",
   "games": [
     "gen2"
   ],
   "dependencies": [],
   "version": "0.1.44",
   "entry": "main.lua",
-  "profile": "content"
+  "profile": "content",
+  "github": "gmarcmods/gmarcs_gen2_voxel_mod"
 }

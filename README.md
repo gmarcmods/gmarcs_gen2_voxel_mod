@@ -1,62 +1,6 @@
-# Complete authored Gen 2 voxel project
+# gmarcs_gen2_voxel_mod
 
-Install NEW_MOD_EX.zip. This project contains all 392 original authored assets plus the native Ilex cut-tree, two sea-rock models and eighteen mall fixture patterns; runtime
-code is shared through relative links to ../voxel-runtime. Never replace its
-data/voxel_heights.lua with the runtime's minimal fallback.
+3D voxel overworld for Gen 2 (Gold/Silver/Crystal).
 
-Version 0.1.17 corrects gym sculpture collision placement, Sprout Tower's
-Bellsprout statues, cuttable trees and gym pits. Shared runtime 1.10.10 fixes
-building-front self-shadow artifacts and trainer marker projection. Changes
-are independent of Johto in First Person.
-
-Validation and migration tools live in ../voxel-runtime/tests and tools.
-Run test_detail_repairs.lua from that repository (or by its full path) to
-compare unrelated authored assets against the 0.1.16 recovery baseline.
-Package from the workspace root with scripts/export-mods.py NEW_MOD_EX.
-
-Version 0.1.19 rebuilds Kurt’s tables, cabinets and workbench tools, rounds the
-Slowpoke Well entrance, and models Ilex’s native cut tree and outer tree ring.
-Runtime 1.10.12 adds bounded native cave rock detail without editing collision.
-
-Version 0.1.20 aligns both Ilex gatehouse hulls with their native collision
-footprints and keeps the north and west entrance cells open.
-
-Version 0.1.21 makes the small Johto sea rocks solid, rounded and low,
-with animated water beneath them. All 393 previous assets are retained.
-
-Version 0.1.22 rebuilds department-store shelves, displays, seating, counters,
-windows, elevator fixtures and basement crates. All 395 previous assets are
-retained; eighteen additional fixture patterns bring the total to 413.
-
-Version 0.1.23 details Goldenrod’s tower facade, dishes and antenna lattice,
-and both Radio Tower interiors’ desks, phones, CRTs, studio equipment, drawers
-and framed glass. Fourteen reception modules bring the inventory to 427.
-
-
-Version 0.1.32 keeps camera look live during conversations/Yes-No in 1ST and
-3RD, removes their experimental labels, repairs table/desk floor footprints
-in both house atlases, and improves Kanto cliffs, domed boundary rocks, fence
-rails and Nugget Bridge supports. All 431 prior asset IDs are retained; 429
-unrelated assets are unchanged and one bridge model is added (432 total).
-Runtime 1.10.24 is materialized into the exported ZIP.
-
-Version 0.1.33 rebuilds the Pokémon Center counter with a clean low worktop
-and horizontal six-slot healing machine. Native healing balls now appear in
-the tray as solid geometry and stay there as the camera moves. Tested on
-Gold, Silver and Crystal desktop. All 432 previous authored assets remain;
-425 are unchanged, seven station assets are repaired and two counter infills
-are added (434 total).
-
-Version 0.1.34 fixes stair atlas bleeding and stretched tread texture bands.
-Stair heights, directions and all authored geometry are unchanged.
-
-Version 0.1.35 adds rounded Whirl Island formations and asymmetric coastal
-sea-rock clusters, with native cave access, collisions and animated water
-preserved. All 434 previous authored assets are unchanged (441 total).
-
-Version **0.1.36** uses runtime 1.10.25 for coherent native cave rock sides,
-upright ladders, recessed downward shafts and matching landing heights.
-The native warp cells and all 441 authored assets are preserved. Install
-Johto in First Person **1.0.6** separately for the corresponding optional
-cave enclosure/camera-clearance repair. Native 3D belongs here; added
-presentation stays in JIFP. See ../voxel-runtime/docs/cave-interiors.md.
+## Install
+Import `gmarcs_gen2_voxel_mod.zip` via the launcher MODS tab. Enable for Gold.
