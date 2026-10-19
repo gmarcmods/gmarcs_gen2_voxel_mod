@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2
+- Removed credit reference.
+
 ## 1.0.1
 - Added minimal load test suite (5 checks).
 - Filled mod.card differences and credits.
