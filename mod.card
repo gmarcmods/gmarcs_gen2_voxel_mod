@@ -9,7 +9,6 @@ return {
   },
   credits   = {
     { who = "Dramatic Shape", for_ = "Gen 1 voxel mod this grew out of" },
-    { who = "", for_ = "Gen 2 voxel mod reference for Johto tilesets" },
   },
   compat    = { engine = ">=1.0.0 <2.0.0", modApi = 2 },
 }

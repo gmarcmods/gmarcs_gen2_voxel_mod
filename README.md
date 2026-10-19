@@ -6,8 +6,8 @@ Converts the flat tile map into real geometry with a depth-buffered 3D camera.
 Occlusion is the depth buffer, not y-sort. Characters are sprite slabs, shadows
 are real, tilt-shift blur gives the miniature-model look.
 
-Inspired by Dramatic Shape (Gen 1 voxel mod). Tileset reading follows
-'s Gen 2 voxel mod, re-authored against this engine's atlas.
+Inspired by Dramatic Shape (Gen 1 voxel mod). Tileset reading
+re-authored against this engine's atlas.
 
 ## Install
 
