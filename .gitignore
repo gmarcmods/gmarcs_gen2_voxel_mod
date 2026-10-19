@@ -2,3 +2,6 @@
 data/*.bak*
 data/painter_out
 *.log
+dist/
+auditoria.bundle
+*.log
