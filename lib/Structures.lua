@@ -319,6 +319,7 @@ function Structures.forMap(map)
   -- ---- stairs: profile-pinned cells that render as real steps ----
   Structures.buildStairs(S, map, x0, x1, y0, y1)
   V.require("CaveLadders").build(S,map,keyOf)
+  if map.tileset.id=='TILESET_TOWER'then V.require('TinTowerInterior').build(S,map,keyOf)end
 
   -- ---- bookcases: pinned shelves collapsed to one cell of depth ----
   -- The atlas comes along so the shelf front can carry its own measured

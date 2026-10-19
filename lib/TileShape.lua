@@ -515,9 +515,14 @@ function TileShape.bindWorld(state)
 end
 
 local CaveSurface
+local TinTowerInterior
 local function resolvedEdgeAt(map,shapes,tile,tx,ty)
   local s=TerrainEdges.at(map,shapes,resolveAt(map,shapes,tile,tx,ty),tile,tx,ty)
   local id=map.tileset and map.tileset.id
+  if id=='TILESET_TOWER'then
+    TinTowerInterior=TinTowerInterior or V.require('TinTowerInterior')
+    return TinTowerInterior.at(map,s,tile,tx,ty)
+  end
   if (id=='TILESET_CAVE'or id=='TILESET_DARK_CAVE'or id=='TILESET_ICE_PATH') and s
       and (s.class=='cave_rim'or s.class=='cave_plateau'or s.class=='ice_wall'or s.class=='wall')then
     CaveSurface=CaveSurface or V.require("CaveSurface")
