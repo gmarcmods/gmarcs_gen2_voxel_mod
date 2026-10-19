@@ -16,7 +16,7 @@
     "gen2"
   ],
   "dependencies": [],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "entry": "main.lua",
   "profile": "content",
   "github": "gmarcmods/gmarcs_gen2_voxel_mod"
