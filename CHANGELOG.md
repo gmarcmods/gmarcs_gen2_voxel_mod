@@ -1,4 +1,4 @@
 # Changelog
 
-## 0.1.44
-- Renamed mod to gmarcs_gen2_voxel_mod.
+## 1.0.0
+- Initial public release of gmarcs_gen2_voxel_mod.
