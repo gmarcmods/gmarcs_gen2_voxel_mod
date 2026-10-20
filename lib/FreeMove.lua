@@ -278,7 +278,9 @@ function FreeMove.tick(state, polledInput)
   -- path's simulated PAD_DOWN: south drift with nothing held, braked by
   -- holding A or B exactly as the road's sign promises
   local moving = (mx ~= 0 or mz ~= 0)
-  if not moving and Game.save and Game.save.onBike then
+  if not moving and state.freeMoveDrift then
+    wx,wz=state:freeMoveDrift(input);moving=wx~=0 or wz~=0
+  elseif not moving and Game.save and Game.save.onBike then
     local field = Game.data and Game.data.field
     local fm = field and field.forcedMovement
     local braking = input:isDown("a") or input:isDown("b")

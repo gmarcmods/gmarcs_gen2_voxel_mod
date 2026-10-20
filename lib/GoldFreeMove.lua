@@ -53,6 +53,10 @@ function G.install()
    end
    return nil
   end
+  function a:freeMoveDrift(input)
+   if Field.isBiking(w.playerState)and w:downhill()and not input:isDown('a')and not input:isDown('b')then return 0,1 end
+   return 0,0
+  end
   function a:freeMoveSpeed()
    local p=w.player
    local frames=Bike.stepFrames(w.playerState,p.facing,w:downhill(),Player.STEP_FRAMES)
@@ -114,7 +118,7 @@ function G.install()
   -- Scripted grid moves and forced tiles keep their native behavior.
   if not F.driving(self) or self:busy() or p.moving or Permissions.isIce(coll)
      or Permissions.currentDirection(coll) or Permissions.doorForcedDirection(coll)
-     or Permissions.isWhirlpool(coll) or shore or self:downhill() then
+     or Permissions.isWhirlpool(coll) or shore then
    release(self);return nativeMove(self,dir,...)
   end
   local x,y,map=p.px,p.py,self.map
