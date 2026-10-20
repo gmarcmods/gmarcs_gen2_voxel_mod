@@ -254,6 +254,7 @@ end
 -- consulted for its alpha, so no palette work is needed.
 local function drawShadow(sprite, px, py, facing, phase, flip, gh, lift)
   local def = sprite.def
+  px,py=SpriteBillboards.anchor(def,px,py)
   local frame, mirror = frameFor(def, facing, phase, flip)
   local mesh = SpriteBillboards.shadowQuad(def, frame)
   if not mesh then return end
@@ -370,6 +371,7 @@ end
 local function drawEntity(sprite, px, py, facing, phase, flip, gh, colors,
                           lift)
   local def = sprite.def
+  px,py=SpriteBillboards.anchor(def,px,py)
   local tex = sprite:resolveImage()
   if colors and not def.trueColor then
     tex = TerrainAtlas.forSprite(def.image, colors) or tex
@@ -896,10 +898,9 @@ local function castShadows(state, terrain, nbMesh, posed, cx, cy, vw, vh,
     if solid then
       ShadowMap.draw(solid,p.sprite:resolveImage(),ShadowMap.snug(StaticProps.matrix(p.px,p.py,p.gh+(p.lift or 0))))
     elseif mesh then
-      ShadowMap.draw(mesh, p.sprite:resolveImage(),
-                     ShadowMap.snug(
-                       Voxel3D.casterMatrix(p.px, p.py, p.gh + (p.lift or 0),
-                                            mirror)))
+      local x,z=SpriteBillboards.anchor(def,p.px,p.py)
+      ShadowMap.draw(mesh,p.sprite:resolveImage(),
+        ShadowMap.snug(Voxel3D.casterMatrix(x,z,p.gh+(p.lift or 0),mirror)))
     end
   end
   ShadowMap.sprites(false)

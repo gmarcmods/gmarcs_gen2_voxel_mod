@@ -32,6 +32,10 @@ local Voxel3D = V.require("Voxel3D")
 local SpriteBillboards = {}
 
 local meshes = {}
+function SpriteBillboards.anchor(def,x,z)
+ if def.id=='SPRITE_BIG_SNORLAX'or def.id=='SPRITE_BIG_LAPRAS'then return x+8,z+16 end
+ return x,z
+end
 
 -- One flat 16x16 quad UV-mapped to a whole frame. A hair of inset keeps
 -- the sampler inside this frame rather than picking up the neighbouring
@@ -40,6 +44,22 @@ local function buildCard(def, frame)
   local ok, img = pcall(Assets.image, def.image)
   if not (ok and img) then return nil end
   local iw, ih = img:getDimensions()
+  if def.id=='SPRITE_BIG_SNORLAX'or def.id=='SPRITE_BIG_LAPRAS'then
+    -- Native FacingBigDollSymmetric: two stacked 16px source frames,
+    -- mirrored into a complete 32px square. These are not walking poses.
+    local verts,indices={},{}
+    for half=0,1 do for side=0,1 do
+      local x,y=side*16-8,(1-half)*16
+      local u0,u1=.02/iw,15.98/iw
+      if side==1 then u0,u1=u1,u0 end
+      local v0,v1=(half*16+.05)/ih,(half*16+15.95)/ih
+      local n=#verts
+      for _,p in ipairs({{x,y,0,u0,v1,1},{x+16,y,0,u1,v1,1},
+        {x+16,y+16,0,u1,v0,1},{x,y+16,0,u0,v0,1}})do verts[#verts+1]=p end
+      Voxel3D.pushQuad(indices,n/4)
+    end end
+    return Voxel3D.newMesh(verts,indices)
+  end
   local fy = frame * 16
   if fy + 16 > ih then fy = 0 end
   local u0, u1 = 0.02 / iw, (16 - 0.02) / iw
