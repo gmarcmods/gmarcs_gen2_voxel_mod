@@ -39,26 +39,20 @@ for n,p in ipairs(patterns) do
   for x=d+2,d+13 do put(a,x,14,z,(H-15)*W+x) end
  end end
  local back=p.roofRows==0 and -32 or 0
- -- Hollow shells keep large buildings editable without storing invisible
- -- solid roof layers. Houses slope continuously to a hip ridge; commercial
- -- roofs keep their shallow bevel. Mirror the native roof band on both slopes.
- for x=0,W-1 do for z=back,H-1 do
-  local pitched=a.tiles[1][1]==5
-  local sy=math.min(p.roofRows-1,math.floor(z/H*p.roofRows))
-  local bevel=math.min(pitched and math.huge or 2,x,W-1-x,z-back,H-1-z)
-  local sx=x
-  if pitched then
-   local band=math.min(p.roofRows,32)
-   sy=band-1-math.floor(bevel*band/math.ceil(math.min(W,H)/2))
-   -- Corner tiles include the flat sprite's background/outline. Use the
-   -- interior roof motif on the hip faces, oriented along their eaves.
-   local side=math.min(x,W-1-x)<math.min(z,H-1-z)
-   sx=16+(side and z or x)%8
-  end
-  local i=p.roofRows==0 and 1 or sy*W+sx
-  local thickness=(x==0 or x==W-1 or z==back or z==H-1)and 2 or 0
-  for layer=0,thickness do put(a,x,h+2+bevel-layer,z,i)end
- end end
+ -- Houses use the Gen 1 sprite silhouette roof, not a second raised roof.
+ if a.tiles[1][1]==5 then
+  a.spriteRoof={rows=p.roofRows,wallHeight=h,back=7,front=8,
+   cycle={5,p.roofRows==16 and 8 or 12},slab=4,overhang=4}
+ else
+  -- Flat commercial roofs retain their existing hollow bevel.
+  for x=0,W-1 do for z=back,H-1 do
+   local sy=math.min(p.roofRows-1,math.floor(z/H*p.roofRows))
+   local i=p.roofRows==0 and 1 or sy*W+x
+   local bevel=math.min(2,x,W-1-x,z-back,H-1-z)
+   local thickness=(x==0 or x==W-1 or z==back or z==H-1)and 2 or 0
+   for layer=0,thickness do put(a,x,h+2+bevel-layer,z,i)end
+  end end
+ end
  -- Original window pixels stay intact behind their frame and sill.
  for r,row in ipairs(a.tiles) do for c,t in ipairs(row) do if (t==10 or t==50) and (r-1)*8>=p.roofRows then
   local x0,sy0=(c-1)*8,(r-1)*8

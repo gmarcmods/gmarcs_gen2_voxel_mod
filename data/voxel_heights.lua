@@ -17269,7 +17269,6 @@ end)()
           if row[1]~=5 and row[1]~=21 then break end
           band=r*8
         end
-        band=math.min(band,32)
       end
       local edited={}
       for _,v in ipairs(a.voxelEdits)do
@@ -17278,20 +17277,19 @@ end)()
           v.i=(p[2]+7-v.y%8)*W+p[1]+(v.z==0 and v.x or v.z)%8
         end
         if not v.remove and v.y>=h and v.y<=h+2 and v.z>=0 and v.z<H then
-          if v.y==h+2 then
-            -- A roof reaches its ridge instead of flattening eight pixels in.
-            local rise=math.min(pitched and math.huge or 2,v.x,W-1-v.x,v.z,H-1-v.z)
-            if pitched then
-              local sy=band-1-math.floor(rise*band/math.ceil(math.min(W,H)/2))
-              local side=math.min(v.x,W-1-v.x)<math.min(v.z,H-1-v.z)
-              v.i=sy*W+16+(side and v.z or v.x)%8
-            end
+          -- Remove the old roof entirely before applying the sprite roof.
+          if not pitched and v.y==h+2 then
+            local rise=math.min(2,v.x,W-1-v.x,v.z,H-1-v.z)
             local thickness=(v.x==0 or v.x==W-1 or v.z==0 or v.z==H-1)and 2 or 0
             for layer=0,thickness do edited[#edited+1]={x=v.x,y=v.y+rise-layer,z=v.z,i=v.i,region=v.region}end
           end
         else edited[#edited+1]=v end
       end
       a.voxelEdits=edited
+      if pitched then
+        a.spriteRoof={rows=band,wallHeight=h,back=7,front=8,
+          cycle={5,band==16 and 8 or 12},slab=4,overhang=4}
+      end
     end
   end
   return value

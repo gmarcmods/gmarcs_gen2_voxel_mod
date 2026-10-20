@@ -1033,7 +1033,11 @@ local function authoredTileModel(sp, pr, t)
 end
 
 local function model(sp, pr, t)
-  if t.surfaces then return AssetSurface.build(sp.W, sp.H, t.surfaces, t.voxelEdits, false) end
+  if t.surfaces then
+    local authored=AssetSurface.build(sp.W,sp.H,t.surfaces,t.voxelEdits,false)
+    if t.spriteRoof then return V.require('SpriteRoof').build(authored,sp,t.spriteRoof)end
+    return authored
+  end
   if t.tileShapes then return authoredTileModel(sp, pr, t) end
   if t.parts then return deskSetModel(sp, pr, t) end
   local W, H, D = sp.W, sp.H, pr.D
