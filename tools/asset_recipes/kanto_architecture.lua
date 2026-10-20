@@ -40,12 +40,22 @@ for n,p in ipairs(patterns) do
  end end
  local back=p.roofRows==0 and -32 or 0
  -- Hollow shells keep large buildings editable without storing invisible
- -- solid roof layers. The top and three-pixel fascia form a level deck.
+ -- solid roof layers. Houses slope continuously to a hip ridge; commercial
+ -- roofs keep their shallow bevel. Mirror the native roof band on both slopes.
  for x=0,W-1 do for z=back,H-1 do
-  local sy=math.min(p.roofRows-1,math.floor(z/H*p.roofRows))
-  local i=p.roofRows==0 and 1 or sy*W+x
   local pitched=a.tiles[1][1]==5
-  local bevel=math.min(pitched and 8 or 2,x,W-1-x,z-back,H-1-z)
+  local sy=math.min(p.roofRows-1,math.floor(z/H*p.roofRows))
+  local bevel=math.min(pitched and math.huge or 2,x,W-1-x,z-back,H-1-z)
+  local sx=x
+  if pitched then
+   local band=math.min(p.roofRows,32)
+   sy=band-1-math.floor(bevel*band/math.ceil(math.min(W,H)/2))
+   -- Corner tiles include the flat sprite's background/outline. Use the
+   -- interior roof motif on the hip faces, oriented along their eaves.
+   local side=math.min(x,W-1-x)<math.min(z,H-1-z)
+   sx=16+(side and z or x)%8
+  end
+  local i=p.roofRows==0 and 1 or sy*W+sx
   local thickness=(x==0 or x==W-1 or z==back or z==H-1)and 2 or 0
   for layer=0,thickness do put(a,x,h+2+bevel-layer,z,i)end
  end end

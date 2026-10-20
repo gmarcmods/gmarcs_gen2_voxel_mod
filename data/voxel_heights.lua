@@ -17263,6 +17263,14 @@ end)()
       local wall=pos[34]or pos[35]or pos[75]
       local peak=0;for _,v in ipairs(a.voxelEdits)do if not v.remove then peak=math.max(peak,v.y)end end
       local h=peak-2
+      local band=0
+      if pitched then
+        for r,row in ipairs(a.tiles)do
+          if row[1]~=5 and row[1]~=21 then break end
+          band=r*8
+        end
+        band=math.min(band,32)
+      end
       local edited={}
       for _,v in ipairs(a.voxelEdits)do
         if not v.remove and wall and(v.z==0 or v.x==0 or v.x==W-1)and v.y<h then
@@ -17271,7 +17279,13 @@ end)()
         end
         if not v.remove and v.y>=h and v.y<=h+2 and v.z>=0 and v.z<H then
           if v.y==h+2 then
-            local rise=math.min(pitched and 8 or 2,v.x,W-1-v.x,v.z,H-1-v.z)
+            -- A roof reaches its ridge instead of flattening eight pixels in.
+            local rise=math.min(pitched and math.huge or 2,v.x,W-1-v.x,v.z,H-1-v.z)
+            if pitched then
+              local sy=band-1-math.floor(rise*band/math.ceil(math.min(W,H)/2))
+              local side=math.min(v.x,W-1-v.x)<math.min(v.z,H-1-v.z)
+              v.i=sy*W+16+(side and v.z or v.x)%8
+            end
             local thickness=(v.x==0 or v.x==W-1 or v.z==0 or v.z==H-1)and 2 or 0
             for layer=0,thickness do edited[#edited+1]={x=v.x,y=v.y+rise-layer,z=v.z,i=v.i,region=v.region}end
           end
