@@ -192,6 +192,22 @@ local function openCell(map, cx, cy, surfing)
   if map:warpAtCell(cx, cy) then return false end
   if map:isWarpTileCell(cx, cy) then return false end
   if map.isGrassCell and map:isGrassCell(cx, cy) then return false end
+  if map.tileAt then
+    local S=V.require('Structures')
+    local structure=S.forMap and S.forMap(map)
+    if structure and structure.battleBlocked then
+      for dy=0,1 do for dx=0,1 do
+        if structure.battleBlocked[(cy*2+dy+64)*4096+cx*2+dx+64]then return false end
+      end end
+    end
+    local T=V.require('TileShape')
+    local shapes=T.forMap(map)
+    for dy=0,1 do for dx=0,1 do
+      local tx,ty=cx*2+dx,cy*2+dy
+      local s=T.at(map,shapes,map:tileAt(tx,ty),tx,ty)
+      if s and(s.art=='stair'or tostring(s.class):find('stair',1,true))then return false end
+    end end
+  end
   if map:isWalkableCell(cx, cy) then return true end
   return (surfing and map:isWaterCell(cx, cy)) or false
 end
@@ -369,7 +385,7 @@ function BattleArena.find(map, fromX, fromY, surfing)
         arena.map = host
         -- which camera rig this spot is framed for; nil is the default long
         -- lens, "close" the short one small rooms need (see BattleCam)
-        arena.cam = pick.cam
+        arena.cam = pick.cam or(host.def and host.def.environment~='ROUTE'and host.def.environment~='TOWN'and'wide'or nil)
         return arena
       end
     end
@@ -410,6 +426,8 @@ function BattleArena.search(map, fromX, fromY, surfing, wantClear)
             local d = dx * dx + dy * dy
             if not bestD or d < bestD then
               local cand = place(shape, x, y)
+              local env=map.def and map.def.environment
+              if env and env~='ROUTE'and env~='TOWN'then cand.cam='wide'end
               if not needClear or BattleArena.clearance(map, cand) then
                 best, bestD = cand, d
               end

@@ -1557,6 +1557,9 @@ function Buildings.stamp(S, map, quads, tx, ty, bw, bh, t)
       else
         S.shapeAt[k] = shape
         S.skip[k] = true
+        if t and t.id and t.id:find('stair',1,true)then
+          S.battleBlocked=S.battleBlocked or{};S.battleBlocked[k]=true
+        end
         -- Wells and descending ladders author their own below-floor walls
         -- and bottom. A synthesized y=0 floor would hide that geometry.
         if t and t.cutFloor then S.ground[k] = nil

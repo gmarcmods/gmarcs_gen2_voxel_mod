@@ -101,6 +101,7 @@ local TILELAGS = { stair_e = true, stair_w = true,
                    stair_down_e = true, stair_down_w = true }
 
 function Gen2.groundHeightAt(map, shapes, cellX, cellY)
+  if map.id=='TIN_TOWER_ROOF'and map:inBounds(cellX,cellY)then return 48 end
   local tx, ty = cellX * 2, cellY * 2
   local tile = map:tileAt(tx, ty)
   if tile == nil then return 0 end

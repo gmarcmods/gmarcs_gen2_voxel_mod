@@ -17223,5 +17223,61 @@ end)()
     end
   end
   for _, asset in ipairs(value.buildings.TILESET_FACILITY) do asset.groundTile = 0 end
+  -- Repair only the named authored pieces; every other asset is retained.
+  for _,a in ipairs(value.buildings.TILESET_MANSION)do if a.id=='mansion_workdesk'then
+    local edits={{x=0,y=0,z=0,remove=true}}
+    local function box(x0,y0,z0,w,h,d,sample)
+      for x=x0,x0+w-1 do for y=y0,y0+h-1 do for z=z0,z0+d-1 do
+        edits[#edits+1]={x=x,y=y,z=z,i=sample(x,y,z),region=1}
+      end end end
+    end
+    -- Open desk, a deep CRT with its complete front sprite, flat keyboard.
+    box(0,8,0,32,2,16,function()return 2*32+1 end)
+    for _,x in ipairs({1,28})do for _,z in ipairs({1,12})do box(x,0,z,3,8,3,function()return 14*32+1 end)end end
+    box(16,10,1,16,16,10,function(x,y)return (25-y)*32+x end)
+    box(2,10,10,12,1,5,function(x,y,z)return (z-2)*32+x end)
+    -- Preserve the native chair at floor level, separate from the tabletop.
+    box(2,4,19,11,2,9,function(x,y,z)return (z-3)*32+x end)
+    box(2,6,26,11,7,2,function(x,y)return (31-y)*32+x end)
+    for _,x in ipairs({3,10})do for _,z in ipairs({20,25})do box(x,0,z,2,4,2,function()return 30*32+3 end)end end
+    a.voxelEdits=edits
+  end end
+  for _,a in ipairs(value.buildings.TILESET_MANSION)do if a.id=='mansion_filing_cabinet'then
+    -- This native sprite is a bed, not an upright filing cabinet.
+    a.surfaces={{rect={0,4,16,28},orientation='horizontal',height=5,depth=2,z=4},
+      {rect={0,0,16,4},orientation='vertical',height=5,depth=2,z=1}}
+    a.voxelEdits={}
+    for _,x in ipairs({1,12})do for _,z in ipairs({5,28})do
+      for dx=0,2 do for dz=0,2 do for y=0,4 do
+        a.voxelEdits[#a.voxelEdits+1]={x=x+dx,y=y,z=z+dz,i=30*16+2,region=1}
+      end end end
+    end end
+  end end
+  for _,a in ipairs(value.buildings.TILESET_KANTO)do
+    local W,H=#a.tiles[1]*8,#a.tiles*8
+    local pitched=a.tiles[1][1]==5
+    local flatRoof=a.tiles[1][1]==76 or a.id=='kanto_west_gate'or a.id=='kanto_east_gate'
+    if a.id:match('^kanto_')and a.voxelEdits and(pitched or flatRoof)then
+      local pos={}
+      for r,row in ipairs(a.tiles)do for c,t in ipairs(row)do if not pos[t]then pos[t]={(c-1)*8,(r-1)*8}end end end
+      local wall=pos[34]or pos[35]or pos[75]
+      local peak=0;for _,v in ipairs(a.voxelEdits)do if not v.remove then peak=math.max(peak,v.y)end end
+      local h=peak-2
+      local edited={}
+      for _,v in ipairs(a.voxelEdits)do
+        if not v.remove and wall and(v.z==0 or v.x==0 or v.x==W-1)and v.y<h then
+          local p=v.y<8 and pos[26]or wall;p=p or wall
+          v.i=(p[2]+7-v.y%8)*W+p[1]+(v.z==0 and v.x or v.z)%8
+        end
+        if not v.remove and v.y>=h and v.y<=h+2 and v.z>=0 and v.z<H then
+          if v.y==h+2 then
+            local rise=math.min(pitched and 8 or 2,v.x,W-1-v.x,v.z,H-1-v.z)
+            for layer=0,2 do edited[#edited+1]={x=v.x,y=v.y+rise-layer,z=v.z,i=v.i,region=v.region}end
+          end
+        else edited[#edited+1]=v end
+      end
+      a.voxelEdits=edited
+    end
+  end
   return value
 end)()

@@ -249,6 +249,10 @@ function Structures.forMap(map)
         runs = {}, skip = {}, ground = {}, doorFold = {}, objectQuads = {},
         grassQuads = {}, flowerQuads = {}, roundStamps = {}, assetStamps = {}, figures = {} }
   Buildings.build(S, map, pixels(tileset), perRow)
+  if map.id=='ROUTE_6'then V.require('RoomGeometry').build(S,map,keyOf)end
+  if map.id=='TIN_TOWER_ROOF'then
+    for _,stamp in ipairs(S.assetStamps)do stamp.my=48 end
+  end
 
   -- Fold doors into their buildings. A door cell is WALKABLE (the player
   -- steps onto it to warp), so it resolves to ground and punches a hole in

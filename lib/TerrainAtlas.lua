@@ -236,7 +236,15 @@ local DIRS4 = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } }
 local function patch(out, entry, spec, step)
   local perRow, tile = entry.perRow, spec.tile
   local dx, dy = (tile % perRow) * 8, math.floor(tile / perRow) * 8
-  if spec.kind == "hshift" then
+  if spec.kind == "scroll" then
+    local timer=step%8
+    local horizontal=({[0]=0,1,2,3,2,1,0,-1})[timer]
+    local ox=(spec.scroll.h or 0)>0 and horizontal or 0
+    local oy=timer*(spec.scroll.v or 0)
+    for y=0,7 do for x=0,7 do
+      out:setPixel(dx+(x+ox)%8,dy+(y+oy)%8,entry.base:getPixel(dx+x,dy+y))
+    end end
+  elseif spec.kind == "hshift" then
     -- the water rotate (the asm's rrca/rlca run): the tile's own pixels,
     -- rolled sideways. Read from the UNANIMATED base, or each step would
     -- compound on the last one's shift.
@@ -335,7 +343,8 @@ local function specsFor(tileset)
   local out = nil
   for _, spec in ipairs(declared or {}) do
     local usable = spec.tile
-      and ((spec.kind == "hshift" and spec.offsets and #spec.offsets > 0)
+      and ((spec.kind == "scroll" and spec.scroll and spec.sequence)
+           or (spec.kind == "hshift" and spec.offsets and #spec.offsets > 0)
            or (spec.kind == "frames" and spec.images and spec.sequence
                and #spec.sequence > 0))
     if usable then

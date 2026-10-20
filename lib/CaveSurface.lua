@@ -15,8 +15,8 @@ function C.at(map,shape,tx,ty)
    for _,d in ipairs({{1,0},{-1,0},{0,1},{0,-1}})do
     if map:isWaterCell(cx+d[1],cy+d[2])then kind='floor';break end
    end
-   local coll=map.cellCollision and map:cellCollision(cx,cy)
-   if kind=='solid'and coll and coll>=0xb0 and coll<=0xb7 then kind='lip'end
+   -- 0xb0..0xb7 are side walls, not jump ledges (0xa0..0xa7).
+   -- The north cap of a raised platform must retain its rock height.
   end
  end
  local key=kind..':'..id

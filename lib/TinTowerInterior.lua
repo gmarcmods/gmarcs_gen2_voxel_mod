@@ -10,6 +10,12 @@ function T.enabled(map)
  return map.tileset and map.tileset.id=='TILESET_TOWER' and n and n>=2 and n<=9
 end
 function T.at(map,original,tile,tx,ty)
+ if map.id=='TIN_TOWER_ROOF'and original and original.class~='void'then
+  local out={};for k,v in pairs(original)do out[k]=v end
+  local distance=math.max(0,16-tx,tx-19)
+  out.h=math.max(12,48-distance*3);out.art='flat';out.authored=true
+  return out
+ end
  if not T.enabled(map)or tx<0 or ty<0 or tx>=map.widthCells*2 or ty>=map.heightCells*2 then return original end
  if pits[tile]then return pit end
  if tile==2 then return floor end

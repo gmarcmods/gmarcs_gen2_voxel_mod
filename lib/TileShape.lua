@@ -516,6 +516,7 @@ end
 
 local CaveSurface
 local TinTowerInterior
+local WaterfallTerrain
 local function resolvedEdgeAt(map,shapes,tile,tx,ty)
   local s=TerrainEdges.at(map,shapes,resolveAt(map,shapes,tile,tx,ty),tile,tx,ty)
   local id=map.tileset and map.tileset.id
@@ -526,7 +527,11 @@ local function resolvedEdgeAt(map,shapes,tile,tx,ty)
   if (id=='TILESET_CAVE'or id=='TILESET_DARK_CAVE'or id=='TILESET_ICE_PATH') and s
       and (s.class=='cave_rim'or s.class=='cave_plateau'or s.class=='ice_wall'or s.class=='wall')then
     CaveSurface=CaveSurface or V.require("CaveSurface")
-    return CaveSurface.at(map,s,tx,ty)
+    s=CaveSurface.at(map,s,tx,ty)
+  end
+  if map.tileset and map.tileset.generation==2 then
+    WaterfallTerrain=WaterfallTerrain or V.require('WaterfallTerrain')
+    s=WaterfallTerrain.at(map,s,tx,ty)
   end
   return s
 end
@@ -548,6 +553,7 @@ function TileShape.at(map, shapes, tile, tx, ty)
     if spec then return spec end
   end
   local s=resolvedEdgeAt(map,shapes,tile,tx,ty)
+  if map.id=='SILPH_CO_1F'or map.id=='ROUTE_6'or map.tileset.id=='TILESET_ELITE_FOUR_ROOM'then s=V.require('RoomGeometry').at(map,s,tile)end
   if not shapes.mountain then return s end
   return MountainShape.at(map,shapes,s,tx,ty,resolvedEdgeAt)
 end

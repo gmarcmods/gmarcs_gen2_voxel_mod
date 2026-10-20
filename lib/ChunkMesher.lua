@@ -840,7 +840,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, instances)
       Budget.tick()
       for i=1,4 do
         local c,s=assetCorners[i],q[i]
-        c[1],c[2],c[3]=s[1]+st.mx,s[2],s[3]+st.mz
+        c[1],c[2],c[3]=s[1]+st.mx,s[2]+(st.my or 0),s[3]+st.mz
       end
       local keep=st.own
       if not keep then
