@@ -5,17 +5,20 @@ local P=dofile(root..'/historic_primitives.lua');local s=P.s;local assets={}
 local function add(a) assets[#assets+1]=a;return a end
 local desk=add(P.blank('mansion_workdesk',{{42,43,44,45},{58,59,60,61},{74,75,76,77},{90,91,17,17}}))
 -- Desk spans both the keyboard and monitor with space underneath.
-P.box(desk,0,8,0,32,2,15,function(x,y,z)return 10*32+x end)
+P.box(desk,0,8,0,32,2,15,function(x,y,z)return 2*32+1 end)
 for _,x in ipairs({1,28}) do for _,z in ipairs({1,12}) do P.box(desk,x,0,z,3,8,3,14*32+x) end end
-P.box(desk,18,10,1,12,11,8,function(x,y,z)return math.min(7,20-y)*32+x end)
-P.box(desk,2,10,4,12,1,6,function(x,y,z)return (z+2)*32+x end)
+P.box(desk,16,10,1,16,16,10,function(x,y,z)return (25-y)*32+x end)
+P.box(desk,2,10,10,12,1,5,function(x,y,z)return (z-2)*32+x end)
 -- Chair is included in the same pattern but remains a separate supported seat.
 P.box(desk,2,4,19,11,2,9,function(x,y,z)return (z-3)*32+x end)
 P.box(desk,2,6,26,11,7,2,function(x,y,z)return (31-y)*32+x end)
 for _,x in ipairs({3,10}) do for _,z in ipairs({20,25}) do P.box(desk,x,0,z,2,4,2,30*32+x) end end
 add(P.cabinet('mansion_bookshelf',{{54,56},{34,35},{50,51}},4,10))
 add(P.cabinet('mansion_bookshelf_open',{{54,56},{36,37},{52,53},{50,51}},4,10))
-add(P.cabinet('mansion_filing_cabinet',{{6,7},{22,23},{22,23},{38,39}},4,10))
+-- Retain the historical asset ID, but the source is a bed, not a cabinet.
+local bed=add({id='mansion_filing_cabinet',tiles={{6,7},{22,23},{22,23},{38,39}},surfaces={
+ s({0,4,16,28},'horizontal',5,2,4),s({0,0,16,4},'vertical',5,2,1)},voxelEdits={}})
+for _,x in ipairs({1,12})do for _,z in ipairs({5,28})do P.box(bed,x,0,z,3,5,3,30*16+2)end end
 add(P.table('mansion_lobby_table',{{54,55,55,56},{70,71,71,72},{70,71,71,72},{86,87,87,88}}))
 local plant=add(P.blank('mansion_potted_tree',{{46,47},{94,95}}))
 for y=0,5 do for x=3,12 do for z=3,12 do if (x-7.5)^2+(z-7.5)^2<=(4+y*.3)^2 then P.put(plant,x,y,z,(15-y)*16+x) end end end end

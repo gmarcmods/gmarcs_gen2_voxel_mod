@@ -15,6 +15,7 @@ for ts,list in pairs(before.buildings)do
   local b=current.buildings[ts][i];assert(a.id==b.id)
   if ts=='TILESET_KANTO'and(a.tiles[1][1]==5 or a.tiles[1][1]==76 or a.id=='kanto_west_gate'or a.id=='kanto_east_gate')and a.voxelEdits then
    same(a.tiles,b.tiles);same(a.surfaces,b.surfaces)
+   assert(#b.voxelEdits<=#a.voxelEdits,'roof repair added hidden solid layers to a hollow building')
    if a.tiles[1][1]==5 then
     local edge,center=-math.huge,-math.huge;local w=#a.tiles[1]*8
     for _,v in ipairs(b.voxelEdits)do if not v.remove then

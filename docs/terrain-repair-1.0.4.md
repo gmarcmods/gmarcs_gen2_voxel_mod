@@ -33,7 +33,7 @@ retained for compatibility.
 All 441 authored assets remain. `tests/authored_repair_preservation.lua` checks
 unrelated assets, classes and tile assignments against the 1.0.3 profile. The
 new profile SHA256 is
-`b90937e58e15cf634d3b8834fb16468872321782c94511e2c82437be69b26fd4`.
+`3a12af3449ec5b0fe200c9f4e6596bc9f86cf2aa0bf7d572f90cd437f294e3af`.
 
 ## Verification
 

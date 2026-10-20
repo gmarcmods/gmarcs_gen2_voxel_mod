@@ -17272,7 +17272,8 @@ end)()
         if not v.remove and v.y>=h and v.y<=h+2 and v.z>=0 and v.z<H then
           if v.y==h+2 then
             local rise=math.min(pitched and 8 or 2,v.x,W-1-v.x,v.z,H-1-v.z)
-            for layer=0,2 do edited[#edited+1]={x=v.x,y=v.y+rise-layer,z=v.z,i=v.i,region=v.region}end
+            local thickness=(v.x==0 or v.x==W-1 or v.z==0 or v.z==H-1)and 2 or 0
+            for layer=0,thickness do edited[#edited+1]={x=v.x,y=v.y+rise-layer,z=v.z,i=v.i,region=v.region}end
           end
         else edited[#edited+1]=v end
       end

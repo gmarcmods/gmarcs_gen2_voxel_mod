@@ -12,6 +12,13 @@ for n,p in ipairs(patterns) do
   a.claimOnly=true;a.surfaces=nil;a.voxelEdits=nil
  else
  local W,H=#a.tiles[1]*8,#a.tiles*8;local h=p.wallHeight or H-p.roofRows
+ local positions={}
+ for r,row in ipairs(a.tiles)do for c,tile in ipairs(row)do if not positions[tile]then positions[tile]={(c-1)*8,(r-1)*8}end end end
+ local wall=positions[34]or positions[35]or positions[75]
+ local function wallPixel(x,y)
+  local pos=y<8 and positions[26]or wall;pos=pos or wall
+  return pos and (pos[2]+7-y%8)*W+pos[1]+x%8
+ end
  local doors={};for c,t in ipairs(a.tiles[#a.tiles-1]) do if t==11 then doors[#doors+1]=(c-1)*8 end end
  local function door(x,y) for _,d in ipairs(doors) do if x>=d+2 and x<d+14 and y<14 then return true end end end
  for y=0,h-1 do
@@ -21,10 +28,10 @@ for n,p in ipairs(patterns) do
    local pane=y>=H and (tile==10 or tile==50) and x%8>=1 and x%8<=6 and sy%8>=1 and sy%8<=6
    put(a,x,y,door(x,y) and H-4 or pane and H-2 or H-1,sy*W+x)
    if y>=H and (tile==10 or tile==50) and sy%8==7 then put(a,x,y,H,sy*W+x) end
-   put(a,x,y,0,math.min(H-1,p.roofRows+4)*W+x)
+   put(a,x,y,0,wallPixel(x,y)or math.min(H-1,p.roofRows+4)*W+x)
   end
   for z=1,H-2 do
-   local i=sy*W+8+z%8;put(a,0,y,z,i);put(a,W-1,y,z,i)
+   local i=wallPixel(z,y)or sy*W+8+z%8;put(a,0,y,z,i);put(a,W-1,y,z,i)
   end
  end
  for _,d in ipairs(doors) do for z=H-4,H-2 do
@@ -37,8 +44,10 @@ for n,p in ipairs(patterns) do
  for x=0,W-1 do for z=back,H-1 do
   local sy=math.min(p.roofRows-1,math.floor(z/H*p.roofRows))
   local i=p.roofRows==0 and 1 or sy*W+x
-  put(a,x,h+2,z,i)
-  if x==0 or x==W-1 or z==back or z==H-1 then put(a,x,h,z,i);put(a,x,h+1,z,i) end
+  local pitched=a.tiles[1][1]==5
+  local bevel=math.min(pitched and 8 or 2,x,W-1-x,z-back,H-1-z)
+  local thickness=(x==0 or x==W-1 or z==back or z==H-1)and 2 or 0
+  for layer=0,thickness do put(a,x,h+2+bevel-layer,z,i)end
  end end
  -- Original window pixels stay intact behind their frame and sill.
  for r,row in ipairs(a.tiles) do for c,t in ipairs(row) do if (t==10 or t==50) and (r-1)*8>=p.roofRows then
