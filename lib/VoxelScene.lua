@@ -208,21 +208,6 @@ function VoxelScene.pull(a)
   return 6 + math.max(0, 16 * math.cos(a) - 8) / math.max(math.sin(a), 0.2)
 end
 
--- The sheet frame and mirror flag the 2D path would draw for this pose
--- (same tables as SpriteRenderer). Shared by the billboard pass and the
--- shadow pass so a walking character's shadow swings its legs too.
-local function frameFor(def, facing, phase, flip)
-  local SR = require("src.render.SpriteRenderer")
-  local frame, mirror = 0, false
-  if (def.frames or 1) > 1 then
-    frame = (def.walker and phase == 1) and SR.WALK[facing]
-            or SR.STAND[facing]
-    mirror = facing == "right"
-      or ((facing == "down" or facing == "up") and phase == 1 and flip)
-  end
-  return frame, mirror
-end
-
 -- The facing a pose SHOWS this camera. The flat frames are "how this pose
 -- looks from the south", which is where the orbit always stands; a
 -- first-person eye stands anywhere, so deep enough into the blend the
@@ -255,8 +240,7 @@ end
 local function drawShadow(sprite, px, py, facing, phase, flip, gh, lift)
   local def = sprite.def
   px,py=SpriteBillboards.anchor(def,px,py)
-  local frame, mirror = frameFor(def, facing, phase, flip)
-  local mesh = SpriteBillboards.shadowQuad(def, frame)
+  local mesh,mirror=SpriteBillboards.pose(sprite,facing,phase,flip)
   if not mesh then return end
   Voxel3D.draw(mesh, sprite:resolveImage(),
                Voxel3D.shadowMatrix(px, py, gh, lift, mirror))
@@ -389,8 +373,7 @@ local function drawEntity(sprite, px, py, facing, phase, flip, gh, colors,
     Voxel3D.draw(solid,tex,matrix,0,ShadowMap.snug(matrix))
     return true
   end
-  local frame, mirror = frameFor(def, facing, phase, flip)
-  local mesh = SpriteBillboards.mesh(def, frame)
+  local mesh,mirror=SpriteBillboards.pose(sprite,facing,phase,flip)
   if not mesh then return false end
   -- Camera-ward pull (applied per vertex in the shader, along each
   -- vertex's own eye ray, so it is a PURE depth bias with zero screen
@@ -421,8 +404,7 @@ VoxelScene.drawEntity = drawEntity
 -- mesh for it.
 local function drawGhost(p)
   local def = p.sprite.def
-  local frame, mirror = frameFor(def, viewFacing(p), p.phase, p.flip)
-  local mesh = SpriteBillboards.shadowQuad(def, frame)
+  local mesh,mirror=SpriteBillboards.pose(p.sprite,viewFacing(p),p.phase,p.flip)
   if not mesh then return end
   local tex = p.sprite:resolveImage()
   if p.colors and not def.trueColor then
@@ -537,6 +519,7 @@ end
 -- ghosts standing on a neighbour map are left to honest occlusion, because
 -- it is only your own character you cannot afford to lose behind a roof.
 local function posesOf(state, spriteColors)
+  SpriteBillboards.beginFrame()
   local colors = spriteColors(state.map)
   local posed = {}
   local me = nil
@@ -809,7 +792,11 @@ local function shadowSignature(terrain, nbMesh, posed, cx, cy, vw, vh)
   put(tostring(terrain))
   for i = 1, #nbMesh do put(tostring(nbMesh[i])) end
   for _, p in ipairs(posed) do
-    put(p.sprite.def.image)
+    put(tostring(p.sprite.def.image))
+    if not StaticProps.mesh(p.sprite.def)then
+      local mesh,mirror=SpriteBillboards.pose(p.sprite,viewFacing(p),p.phase,p.flip)
+      put(tostring(mesh));put(mirror and 1 or 0)
+    end
     put(p.px); put(p.py); put(p.gh); put(p.lift or 0)
     put(p.facing); put(p.phase); put(p.flip and 1 or 0)
   end
@@ -892,9 +879,9 @@ local function castShadows(state, terrain, nbMesh, posed, cx, cy, vw, vh,
     -- swaps frame as the eye circles, which costs a redraw the signature
     -- already charges for (FirstPerson.signature) and keeps a card from
     -- fringing against a mirror-flipped record of itself
-    local frame, mirror = frameFor(def, viewFacing(p), p.phase, p.flip)
     local solid=StaticProps.mesh(def)
-    local mesh = solid or SpriteBillboards.shadowQuad(def, frame)
+    local mesh,mirror=solid,false
+    if not solid then mesh,mirror=SpriteBillboards.pose(p.sprite,viewFacing(p),p.phase,p.flip)end
     if solid then
       ShadowMap.draw(solid,p.sprite:resolveImage(),ShadowMap.snug(StaticProps.matrix(p.px,p.py,p.gh+(p.lift or 0))))
     elseif mesh then

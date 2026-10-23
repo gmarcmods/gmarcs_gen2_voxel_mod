@@ -1032,6 +1032,8 @@ mod.hooks:wrap("world.tod", function(next, tod, ctx)
 end)
 
 mod.exports.version = "1.10.31"
+-- Native frame geometry is honored by visible, shadow and ghost billboards.
+mod.exports.supportsVariableSpriteGeometry = true
 -- exposed so a companion mod can pin its own tiles' shapes or read the
 -- camera without reaching into this mod's file layout
 mod.exports.lib = V

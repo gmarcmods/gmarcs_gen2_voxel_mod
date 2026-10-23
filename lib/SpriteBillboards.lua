@@ -32,16 +32,21 @@ local Voxel3D = V.require("Voxel3D")
 local SpriteBillboards = {}
 
 local meshes = {}
+local poses=setmetatable({},{__mode='k'})
+local generation=0
+-- Snapshot once per rendered scene; color, ghost and shadow passes share it.
+function SpriteBillboards.beginFrame()generation=generation+1 end
 function SpriteBillboards.anchor(def,x,z)
  if def.id=='SPRITE_BIG_SNORLAX'or def.id=='SPRITE_BIG_LAPRAS'then return x+8,z+16 end
  return x,z
 end
 
--- One flat 16x16 quad UV-mapped to a whole frame. A hair of inset keeps
+-- One flat quad UV-mapped to the complete native frame. A hair of inset keeps
 -- the sampler inside this frame rather than picking up the neighbouring
 -- one along the shared edge.
-local function buildCard(def, frame)
-  local ok, img = pcall(Assets.image, def.image)
+local function buildCard(def, frame, geometry, image)
+  local ok, img = true,image
+  if not img then ok,img=pcall(Assets.image,def.image)end
   if not (ok and img) then return nil end
   local iw, ih = img:getDimensions()
   if def.id=='SPRITE_BIG_SNORLAX'or def.id=='SPRITE_BIG_LAPRAS'then
@@ -60,27 +65,46 @@ local function buildCard(def, frame)
     end end
     return Voxel3D.newMesh(verts,indices)
   end
-  local fy = frame * 16
-  if fy + 16 > ih then fy = 0 end
-  local u0, u1 = 0.02 / iw, (16 - 0.02) / iw
-  local v0, v1 = (fy + 0.05) / ih, (fy + 15.95) / ih
-  local bottom = 0
-  if def.frames == 1 then
-    local got, data = pcall(Assets.imageData, def.image)
+  local fw,fh=def.frameWidth or 16,def.frameHeight or 16
+  local ax,ay=def.anchorX or fw/2,def.anchorY or fh
+  local cols,offset=def.frameColumns or 1,def.frameOffset or 0
+  local index=frame+offset
+  local sx,sy=(index%cols)*fw,math.floor(index/cols)*fh
+  local sw,sh=fw,fh
+  if geometry then
+    fw,fh=geometry.width or fw,geometry.height or fh
+    ax,ay=geometry.anchorX or ax,geometry.anchorY or ay
+    sx,sy=geometry.x or 0,geometry.y or 0
+    sw,sh=fw,fh
+    -- The engine's quad also covers grid sheets and frame offsets. Its
+    -- viewport is authoritative when older geometry x/y fields lag behind.
+    if geometry.quad then sx,sy,sw,sh=geometry.quad:getViewport()end
+  end
+  if sx+sw>iw or sy+sh>ih then sx,sy=0,0 end
+  local u0,u1=(sx+.02)/iw,(sx+sw-.02)/iw
+  local v0,v1=(sy+.05)/ih,(sy+sh-.05)/ih
+  local dw,dh=def.displayWidth or fw,def.displayHeight or fh
+  local dax,day=def.displayAnchorX or ax*dw/fw,def.displayAnchorY or ay*dh/fh
+  local bottom=0
+  -- Preserve the established native static-prop grounding. Explicit
+  -- variable anchors belong to their author and need no pixel scan.
+  if not geometry and fw==16 and fh==16 and ax==8 and ay==16 and def.frames==1 then
+    local got,data=pcall(Assets.imageData,def.image)
     if got and data then
-      for y = 15, 0, -1 do
-        local ink = false
-        for x = 0, 15 do
-          local r, _, _, a = data:getPixel(x, fy + y)
-          if a > 0 and (def.trueColor or r <= 0.83) then ink = true; break end
+      for y=15,0,-1 do
+        local ink=false
+        for x=0,15 do
+          local r,_,_,a=data:getPixel(sx+x,sy+y)
+          if a>0 and(def.trueColor or r<=.83)then ink=true;break end
         end
-        if ink then bottom = 15 - y; break end
+        if ink then bottom=15-y;break end
       end
     end
   end
-  local verts = {
-    { 0, -bottom, 0, u0, v1, 1 }, { 16, -bottom, 0, u1, v1, 1 },
-    { 16, 16-bottom, 0, u1, v0, 1 }, { 0, 16-bottom, 0, u0, v0, 1 },
+  local x0,y0=8-dax,day-dh-bottom
+  local verts={
+    {x0,y0,0,u0,v1,1},{x0+dw,y0,0,u1,v1,1},
+    {x0+dw,y0+dh,0,u1,v0,1},{x0,y0+dh,0,u0,v0,1},
   }
   local indices = {}
   Voxel3D.pushQuad(indices, 0)
@@ -96,13 +120,75 @@ end
 -- the mesh would read as "behind something" and repaint the figure on open
 -- ground whether or not anything hides it; and the sun must see the same
 -- outline the camera does, or a shadow stops matching what casts it.
-function SpriteBillboards.mesh(def, frame)
-  local key = def.image .. "#" .. frame
-  if meshes[key] == nil then
-    local ok, m = pcall(buildCard, def, frame)
-    meshes[key] = (ok and m) or false
+function SpriteBillboards.mesh(def,frame,geometry,image)
+  local key=tostring(def.image)..'#'..frame
+  local sx,sy,sw,sh
+  if geometry then
+    sx,sy,sw,sh=geometry.x or 0,geometry.y or 0,geometry.width,geometry.height
+    if geometry.quad then sx,sy,sw,sh=geometry.quad:getViewport()end
   end
-  return meshes[key] or nil
+  -- Include all geometry in the key: two defs may share an image but use
+  -- different frame sizes, grid offsets, anchors or world display scales.
+  local legacy=not geometry and(def.frameWidth or 16)==16 and(def.frameHeight or 16)==16
+    and(def.anchorX or 8)==8 and(def.anchorY or 16)==16
+    and(def.frameColumns or 1)==1 and(def.frameOffset or 0)==0
+    and not def.displayWidth and not def.displayHeight and not def.displayAnchorX and not def.displayAnchorY
+  if def.id=='SPRITE_BIG_SNORLAX'or def.id=='SPRITE_BIG_LAPRAS'then key=key..':big'end
+  if not legacy then key=key..':'..table.concat({sx or -1,sy or -1,sw or -1,sh or -1,
+    geometry and geometry.width or def.frameWidth or 16,
+    geometry and geometry.height or def.frameHeight or 16,
+    geometry and geometry.anchorX or def.anchorX or -1,
+    geometry and geometry.anchorY or def.anchorY or -1,
+    def.frameColumns or 1,def.frameOffset or 0,
+    def.displayWidth or -1,def.displayHeight or -1,
+    def.displayAnchorX or -1,def.displayAnchorY or -1},':')end
+  if meshes[key]==nil then
+    local ok,m=pcall(buildCard,def,frame,geometry,image)
+    meshes[key]=(ok and m)or false
+  end
+  return meshes[key]or nil
+end
+
+local SR
+local function nativePose(sprite,facing,phase,flip)
+  local def=sprite.def
+  local frame,mirror=0,false
+  if(def.frames or 1)>1 then
+    frame=(def.walker and phase==1)and SR.WALK[facing]or SR.STAND[facing]
+    frame=frame or 0
+    if frame>=(def.frames or 1)then frame=0 end
+    mirror=facing=='right'or((facing=='down'or facing=='up')and phase==1 and flip)or false
+  end
+  return frame,mirror
+end
+local directions={down=0,up=1,left=2,right=3}
+function SpriteBillboards.pose(sprite,facing,phase,flip)
+  SR=SR or require('src.render.SpriteRenderer')
+  local key=(directions[facing]or 0)*4+(phase==1 and 2 or 0)+(flip and 1 or 0)
+  local bucket=poses[sprite]
+  if not bucket then bucket={};poses[sprite]=bucket end
+  local entry=bucket[key]
+  local def=sprite.def
+  local native=sprite.getPoseGeometry==SR.getPoseGeometry and sprite.getFrameGeometry==SR.getFrameGeometry
+    and(def.frameWidth or 16)==16 and(def.frameHeight or 16)==16
+    and(def.anchorX or 8)==8 and(def.anchorY or 16)==16
+    and(def.frameColumns or 1)==1 and(def.frameOffset or 0)==0
+    and not def.displayWidth and not def.displayHeight
+    and not def.displayAnchorX and not def.displayAnchorY
+  if entry and entry.def==sprite.def and entry.image==sprite.image
+    and(entry.generation==generation or(native and entry.native))then
+    return entry.mesh,entry.mirror,entry.frame
+  end
+  local frame,mirror,geometry
+  if not native and type(sprite.getPoseGeometry)=='function'and def.id~='SPRITE_BIG_SNORLAX'and def.id~='SPRITE_BIG_LAPRAS'then
+    geometry=sprite:getPoseGeometry(facing,phase,flip)
+    frame,mirror=geometry.frame,geometry.mirror
+  else frame,mirror=nativePose(sprite,facing,phase,flip)end
+  local mesh=SpriteBillboards.mesh(def,frame,geometry,sprite.image)
+  entry=entry or{};bucket[key]=entry
+  entry.generation,entry.def,entry.image=generation,def,sprite.image
+  entry.mesh,entry.mirror,entry.frame,entry.native=mesh,mirror,frame,native
+  return mesh,mirror,frame
 end
 
 -- Kept as its own name because the shadow and ghost passes read as their
@@ -112,6 +198,7 @@ SpriteBillboards.shadowQuad = SpriteBillboards.mesh
 
 function SpriteBillboards.invalidate()
   meshes = {}
+  poses=setmetatable({},{__mode='k'})
 end
 
 Assets.register(SpriteBillboards.invalidate)
