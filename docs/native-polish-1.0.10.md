@@ -42,3 +42,12 @@ the saved old profile and disables only the two new scoped geometry rules.
 workspace/tests/native_graphics_review_live.lua reproduces the captures;
 REVIEW_BASELINE=1 selects old data, REVIEW_ONLY filters one target. Water
 animation phase can differ. No ROM or player save is exported.
+
+## Island correction in 1.0.11
+
+The first island rule was too broad: it also flattened the native blocked
+rock patch at cells (4–5,10–11). CoastalPlatforms now changes only native
+walkable cells. Blocked cells retain their original terrain shapes, including
+the 16–18px raised rock section, while the southern walking surface stays
+at 0–1px. Native collisions and the authored profile are unchanged. The live
+review now checks the raised section as well as the two-cell walking test.

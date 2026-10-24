@@ -21,7 +21,9 @@ assert(C.at(m,shapes,water,20,4,4)==water,'water changed')
 assert(C.at(m,shapes,shape,54,0,0)==shape,'water cell cliff banks must keep shoreline handling')
 local blockedRim=map('CHERRYGROVE_CITY',land)
 blockedRim.isWalkableCell=function(_,x,y)return x==3 and y==3 end
-assert(C.at(blockedRim,shapes,shape,54,4,4).h==0,'blocked rock rim must not turn a walkable island back into a mountain')
+assert(C.at(blockedRim,shapes,shape,54,4,4)==shape,'nonwalkable rock patch must retain its native mountain shape')
+local center=C.at(blockedRim,shapes,shape,54,6,6)
+assert(center.h==0 and center.base=='ground','walkable island center must remain a flat platform')
 local outcrop=map('CHERRYGROVE_CITY',land)
 outcrop.isWalkableCell=function()return false end
 assert(C.at(outcrop,shapes,shape,54,4,4)==shape,'unwalkable sea rocks must remain rocks')

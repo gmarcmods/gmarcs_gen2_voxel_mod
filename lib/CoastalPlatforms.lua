@@ -34,7 +34,10 @@ function C.at(map,profile,s,tile,tx,ty)
  if map.id~='CHERRYGROVE_CITY'or not profile.mountain then return s end
  local rock=profile.edges and s.class==profile.edges.shoreClass or false
  for _,name in ipairs(profile.mountain.classes)do if s.class==name then rock=true;break end end
- if not rock or not island(map,math.floor(tx/2),math.floor(ty/2))then return s end
+ local cx,cy=math.floor(tx/2),math.floor(ty/2)
+ -- The native blocked rock patch on the island is still a mountain. Only
+ -- cells the game permits walking on become the low landing platform.
+ if not rock or not map:isWalkableCell(cx,cy)or not island(map,cx,cy)then return s end
  local byTile=shapes[s]
  if not byTile then byTile={};shapes[s]=byTile end
  if not byTile[tile]then
