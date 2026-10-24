@@ -462,7 +462,9 @@ function Structures.forMap(map)
         reg.minY = math.min(reg.minY, c[2])
         reg.maxY = math.max(reg.maxY, c[2])
       end
+      local firstQuad=#S.objectQuads
       Structures.extractObjects(S, map, reg, data, perRow, "opaque")
+      if map.id=='ROUTE_39'then V.require('FenceRails').buildCell(S,map,reg,keyOf,firstQuad)end
     end
 
     -- ---- profile-pinned relief props: top-down drawings that extrude ----
