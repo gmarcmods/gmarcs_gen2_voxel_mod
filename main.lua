@@ -378,6 +378,8 @@ local SETTINGS = {
 SETTINGS[#SETTINGS+1]={V.require('GoldBattle').setting,
  'Stage battles on the MAP or on PLATFORMS. Installed model packs enable STADIUM A/B. OFF uses the classic battle screen.',
  full=true}
+SETTINGS[#SETTINGS+1]={V.require('BattleSprites').setting,
+ 'Optional imported battle artwork. Install the Gen 5 sprite provider and import your own ROM through IMPORTERS. Missing artwork uses native sprites.',full=true}
 local StadiumImport=V.require('StadiumImport')
 StadiumImport.restore()
 function V.refreshSettings()
@@ -1040,6 +1042,7 @@ mod.exports.supportsVariableSpriteGeometry = true
 -- exposed so a companion mod can pin its own tiles' shapes or read the
 -- camera without reaching into this mod's file layout
 mod.exports.lib = V
+mod.exports.registerBattleSpriteProvider = V.require("BattleSprites").register
 -- Additive companions register their own region's profile without patching us.
 local TileShape=V.require('TileShape')
 profileExtensions=V.require('ProfileExtensions').new(function()return rawData('voxel_heights')end,TileShape.builtinHeights(),function(profile)

@@ -73,7 +73,7 @@ local function sideTexture(s,e,side)
   end
  end
  if s.animView then s.animView.fillBackground=function()end end
- local ok,canvas=pcall(capture,e,side,function()
+ local function drawSide()
   local draw=function()s:drawPic(s:activeMon(side),back)end
   if s.anim and s.animView then
    s.animView:present(s.anim,draw,s.battle)
@@ -82,6 +82,11 @@ local function sideTexture(s,e,side)
   elseif s.slideFrame and s.slideFrame<72 then
    local G=love.graphics;G.push();G.translate((back and -1 or 1)*(72-s.slideFrame)*2,0);draw();G.pop()
   else draw()end
+ end
+ local ok,canvas=pcall(function()
+  return V.require('BattleSprites').withFrame(s,side,function()
+   return capture(e,side,drawSide)
+  end)
  end)
  s.pic=oldPic;s.frontAnimFrame=oldFrame;s.enemyTrainerImage=oldTrainer
  if s.animView then s.animView.fillBackground=oldFill end;s.liftedPass=nil
@@ -135,7 +140,13 @@ function B.render(s,winW,winH)
  if not shot then return false end
  e.shot=shot
  G.push('all');G.setShader();G.setColor(1,1,1,1)
- G.setBlendMode('alpha','premultiplied');G.draw(shot.canvas,0,0,0,winW/shot.pw,winH/shot.ph)
+ G.setBlendMode('alpha','premultiplied')
+ local Renderer=require('src.render.Renderer')
+ if Renderer.drawWorldOverride then
+  Renderer.drawWorldOverride(shot.canvas,0,0,winW/shot.pw,winH/shot.ph)
+ elseif Renderer.mirrorsWorldOverride and Renderer.mirrorsWorldOverride()then
+  G.draw(shot.canvas,0,winH,0,winW/shot.pw,-winH/shot.ph)
+ else G.draw(shot.canvas,0,0,0,winW/shot.pw,winH/shot.ph)end
  G.setBlendMode('alpha')
  local good,err=pcall(function()
   e.hud=V.require('GoldBattleHud').draw(s,e,shot,winW,winH,capture)
