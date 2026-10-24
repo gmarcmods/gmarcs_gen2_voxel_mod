@@ -51,3 +51,19 @@ walkable cells. Blocked cells retain their original terrain shapes, including
 the 16–18px raised rock section, while the southern walking surface stays
 at 0–1px. Native collisions and the authored profile are unchanged. The live
 review now checks the raised section as well as the two-cell walking test.
+
+## Pagoda material and capture correction in 1.0.12
+
+The old UV migration assumed 28px storeys with four roof layers. The actual
+authored pagodas have 24px storeys and two-layer roofs, so it missed the
+upper roof surfaces and touched some wall texels. The repair now derives
+roof bands from the completed model, verifies two per storey, and changes
+only those layers. Previous stray wall edits are reverted by rebuilding
+from the recovery profile. Geometry and all other authored values are
+checked against the complete baseline.
+
+The baseline review also now overrides V.data for the lifetime of the
+driver: renderer invalidation during setup must not silently reload current
+artwork into a BEFORE frame. Fresh roof close-ups show the true old/new
+materials; screenshots under exports/media/graphics-followup-1.0.12/
+supersede the earlier roof comparison.
