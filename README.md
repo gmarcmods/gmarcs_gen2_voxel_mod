@@ -12,3 +12,5 @@ re-authored against this engine's atlas.
 ## Install
 
 Import `gmarcs_gen2_voxel_mod.zip` via the launcher MODS tab. Enable for Gold.
+
+Region companions can use the [additive profile extension API](docs/profile-extensions.md).

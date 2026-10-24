@@ -3,7 +3,7 @@
 local L={}
 local trees={park_tree=true,johto_tree=true,johto_small_tree=true,johto_fruit_tree=true,
  modern_tree=true,modern_small_tree=true,forest_tree=true,kanto_tree=true,kanto_sapling=true}
-function L.eligible(t)return t.border and trees[t.id]or false end
+function L.eligible(t)return t.border and (t.lodTree==true or trees[t.id])or false end
 function L.distant(tx,ty,w,h,tw,th)
  return tx+w<=-4 or ty+h<=-4 or tx>=tw+4 or ty>=th+4
 end

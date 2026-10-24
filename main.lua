@@ -68,12 +68,15 @@ function V.require(name)
 end
 
 local dataFiles = {}
-function V.data(name)
+local profileExtensions
+local function rawData(name)
   local hit = dataFiles[name]
-  if hit ~= nil then return hit end
-  local value = chunkFor("data/" .. name .. ".lua")(V)
-  dataFiles[name] = value
-  return value
+  if hit == nil then hit=chunkFor("data/" .. name .. ".lua")(V);dataFiles[name]=hit end
+  return hit
+end
+function V.data(name)
+  if name=='voxel_heights'and profileExtensions then return profileExtensions:current()end
+  return rawData(name)
 end
 
 -- ------- pipelines
@@ -1037,3 +1040,11 @@ mod.exports.supportsVariableSpriteGeometry = true
 -- exposed so a companion mod can pin its own tiles' shapes or read the
 -- camera without reaching into this mod's file layout
 mod.exports.lib = V
+-- Additive companions register their own region's profile without patching us.
+local TileShape=V.require('TileShape')
+profileExtensions=V.require('ProfileExtensions').new(function()return rawData('voxel_heights')end,TileShape.builtinHeights(),function(profile)
+  ChunkMesher.invalidate()
+  TileShape.inject(profile)
+  V.require('Buildings').inject(profile)
+end)
+mod.exports.profileExtensions=profileExtensions

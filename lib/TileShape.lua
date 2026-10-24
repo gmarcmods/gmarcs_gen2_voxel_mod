@@ -258,6 +258,10 @@ function TileShape.heights()
   return out
 end
 
+function TileShape.builtinHeights()
+  local out={}for name,h in pairs(FALLBACK_HEIGHTS)do out[name]=h end return out
+end
+
 -- Class names identify authored groups; the base selects existing geometry.
 -- Keeping both prevents neighboring custom classes from merging by accident.
 function TileShape.baseClass(shape)
