@@ -1,0 +1,203 @@
+{
+  "schema": "voxel.recipe.v1",
+  "id": "cherrygrove_terrace",
+  "size": [
+    32,
+    40
+  ],
+  "budget": 16384,
+  "faceBudget": 8192,
+  "identity": {
+    "description": "A rocky terrace: flat ochre cap, tapered stone rim, native edge art folded once onto its corresponding sides.",
+    "height": 8,
+    "capBounds": [
+      2,
+      2,
+      29,
+      29
+    ],
+    "materials": {
+      "topTile": 60,
+      "sideRect": [
+        0,
+        24,
+        32,
+        8
+      ]
+    }
+  },
+  "placement": {
+    "map": "CHERRYGROVE_CITY",
+    "tiles": [
+      [
+        43,
+        44,
+        44,
+        45
+      ],
+      [
+        59,
+        60,
+        60,
+        61
+      ],
+      [
+        59,
+        60,
+        60,
+        61
+      ],
+      [
+        75,
+        76,
+        76,
+        77
+      ]
+    ],
+    "at8px": [
+      [
+        8,
+        20
+      ],
+      [
+        0,
+        16
+      ],
+      [
+        28,
+        28
+      ]
+    ]
+  },
+  "commands": [
+    {
+      "op": "box",
+      "bounds": [
+        0,
+        0,
+        0,
+        31,
+        1,
+        31
+      ],
+      "material": {
+        "sample": [
+          16,
+          16
+        ]
+      }
+    },
+    {
+      "op": "box",
+      "bounds": [
+        1,
+        2,
+        1,
+        30,
+        3,
+        30
+      ],
+      "material": {
+        "sample": [
+          16,
+          16
+        ]
+      }
+    },
+    {
+      "op": "box",
+      "bounds": [
+        2,
+        4,
+        2,
+        29,
+        7,
+        29
+      ],
+      "material": {
+        "sample": [
+          16,
+          16
+        ]
+      }
+    },
+    {
+      "op": "repeat",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          30,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          30
+        ],
+        [
+          30,
+          0,
+          30
+        ]
+      ],
+      "commands": [
+        {
+          "op": "box",
+          "bounds": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "op": "repeat",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          26,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          26
+        ],
+        [
+          26,
+          0,
+          26
+        ]
+      ],
+      "commands": [
+        {
+          "op": "box",
+          "bounds": [
+            2,
+            4,
+            2,
+            3,
+            7,
+            3
+          ],
+          "remove": true
+        }
+      ]
+    }
+  ]
+}
