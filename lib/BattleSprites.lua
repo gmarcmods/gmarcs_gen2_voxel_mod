@@ -4,12 +4,15 @@ local V=...
 local B={}
 local registered={}
 B.setting=V.require('ModSetting').new('battleSprites','BTL SPRITES',
- {'native','gen5_bw','gen5_b2w2'},{'NATIVE','BLACK/WHITE','BLACK 2/WHITE 2'})
+ {'native','gen5_bw'},{'NATIVE','BLACK/WHITE'})
 local function valid(p)
  return type(p)=='table' and p.apiVersion==2 and type(p.frame)=='function'
   and type(p.capabilities)=='table' and p.capabilities.contract=='national-dex-battle-sprites'
 end
 function B.register(source,label,provider)
+ -- B2W2 is not a supported importer in this product. Do not let an older
+ -- provider reintroduce its removed configuration choice.
+ if source=='gen5_b2w2' then return false end
  assert(type(source)=='string' and source~='native' and valid(provider),'invalid battle sprite provider')
  registered[source]=provider
  local found=false
@@ -23,15 +26,55 @@ function B.register(source,label,provider)
 end
 local function provider(source)
  if registered[source]then return registered[source]end
- if source~='gen5_bw' and source~='gen5_b2w2' then return nil end
+ if source~='gen5_bw' then return nil end
  if not(V.mod and V.mod.find)then return nil end
  local ok,h=pcall(V.mod.find,'GEN5_PRIVATE_SPRITES')
  local p=ok and h and h.exports
  return valid(p)and p or nil
 end
+-- The provider's status uses the engine's validated imported-pack API; do
+-- not guess availability from ROM filenames or private cache paths.
+function B.unavailableReason()
+ local p=provider('gen5_bw')
+ if not p then
+  return 'Enable the Gen 5 sprite provider, then import your own supported Black / White ROM through IMPORTERS. Native sprites remain active.'
+ end
+ if type(p.status)=='function' then
+  local ok,status=pcall(p.status,'gen5_bw')
+  if ok and type(status)=='table' and status.ready then return nil end
+ end
+ return 'Import your own supported Black / White ROM through IMPORTERS in gen1recomp. No usable Black / White battle sprite pack is available; native sprites remain active.'
+end
+-- Keep the choice selectable so attempting it explains what is required in
+-- both configuration screens. Unknown saved values (including old B2W2)
+-- use ModSetting's normal native fallback.
+local settingRow,settingSchema=B.setting.row,B.setting.schema
+if settingRow then
+ function B.setting:row()
+  local row=settingRow(self)
+  local value=row.value
+  row.value=function(...)
+   if self:get()=='gen5_bw' and B.unavailableReason() then return 'BW: IMPORT ROM' end
+   return value(...)
+  end
+  return row
+ end
+end
+if settingSchema then
+ function B.setting:schema(help)
+  local reason=B.unavailableReason()
+  local schema=settingSchema(self,(help or '')..(reason and (' '..reason) or ''))
+  if reason then
+   for _,choice in ipairs(schema.choices or {}) do
+    if choice[2]=='gen5_bw' then choice[1]='BLACK/WHITE: IMPORT ROM' end
+   end
+  end
+  return schema
+ end
+end
 function B.frame(state,side)
  local source=B.setting:get()
- if source=='native' then return nil end
+ if source=='native' or source=='gen5_b2w2' then return nil end
  if side=='player' and state.showPlayerTrainer or side=='enemy' and state.showEnemyTrainer then return nil end
  local mon=state:activeMon(side)
  local def=mon and state.game and state.game.data and state.game.data.pokemon[mon.species]

@@ -36,7 +36,7 @@ end
 local p = provider("sprite_provider")
 assert(BattleSprites.setting, "setting is exposed")
 assert(BattleSprites.register("gen5_bw", "Black / White", p))
-assert(BattleSprites.register("gen5_b2w2", "Black 2 / White 2", p))
+assert(not BattleSprites.register("gen5_b2w2", "Black 2 / White 2", p))
 
 local mon = { species = "PIKACHU", shiny = true, gender = "female" }
 local state = {
@@ -78,7 +78,7 @@ state.game.data.pokemon.PIKACHU.dex = 25
 -- all preserve the native renderer without throwing.
 BattleSprites.setting.value = "gen5_b2w2"
 local b2 = BattleSprites.frame(state, "player")
-assert(b2 and calls[#calls].source == "gen5_b2w2")
+assert(b2 == nil, "removed B2W2 source uses native artwork")
 BattleSprites.setting.value = "unsupported"
 assert(BattleSprites.frame(state, "player") == nil)
 BattleSprites.setting.value = "gen5_bw"
