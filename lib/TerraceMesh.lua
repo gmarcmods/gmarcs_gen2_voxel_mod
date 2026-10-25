@@ -12,7 +12,6 @@ function M.build(spec,aw,ah,perRow)
  end
  local function paint(face,x,y,z)
   if face=='top'then
-   if y+1<spec.height then return z*32+x end -- exposed rim shoulders
    -- Keep the same one-texel-per-voxel ground scale as the walking area.
    return (32+z%8)*32+x%8
   end

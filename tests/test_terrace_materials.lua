@@ -8,7 +8,7 @@ for _,q in ipairs(mesh)do
  assert(q.u>0 and q.u<1 and q.v>0 and q.v<1)
  for _,p in ipairs(q)do assert(p[1]>=0 and p[1]<=32 and p[2]>=0 and p[2]<=s.height and p[3]>=0 and p[3]<=32)end
  if q.face~='top'then assert(y>=24 and y<32,'sides must use the stone border, never the dithered shadow')
- elseif q[1][2]==s.height then assert(y>=32 and y<40 and x<8,'plateau cap must use native ground texels at 1:1 scale')end
+ else assert(y>=32 and y<40 and x<8,'plateau cap must use native ground texels at 1:1 scale')end
 end
 for _,f in ipairs({'top','south','north','west','east'})do assert(seen[f],'missing terrace face')end
 local height={}

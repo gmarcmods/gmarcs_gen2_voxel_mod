@@ -699,6 +699,12 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, instances)
             local lat = LATERAL[d]
             local hl = lat and heightAt(tx + lat[1], ty + lat[2]) or 0
             local hr = lat and heightAt(tx + lat[3], ty + lat[4]) or 0
+            if s.rockMaterial and not run then
+              for _, b in ipairs(V.require('RockMaterial').bands(nh,h))do
+                sideQuad(d,x0,z0,b.y0,b.y1,b.tile,b.v0,b.v1,
+                         sideShades(hl,hr,b.y0,b.y1,b.y0<=nh,Voxel3D.FACE_SHADE[d]))
+              end
+            else
             for band = math.floor(nh / 8), math.ceil(h / 8) - 1 do
               local y0 = math.max(nh, band * 8)
               local y1 = math.min(h, band * 8 + 8)
@@ -749,6 +755,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, instances)
                          sideShades(hl, hr, y0, y1, y0 <= nh, shade))
               end
             end
+            end -- native rock material / ordinary face bands
           end
         end
 
