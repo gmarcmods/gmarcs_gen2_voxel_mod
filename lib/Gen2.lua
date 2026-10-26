@@ -222,7 +222,9 @@ function Gen2.worldCtx(world, level, game)
     -- palette is mapped -- the same true-colour mode Gen 1 renders in
     paletteFor = function() return nil end,
     drawFx = function(project, scale)
-      pcall(fxEmote, project, scale)
+      V.require("CanvasOrientation").withRawFx(function()
+        pcall(fxEmote, project, scale)
+      end)
     end,
   }
 end

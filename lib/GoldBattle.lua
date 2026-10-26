@@ -141,12 +141,7 @@ function B.render(s,winW,winH)
  e.shot=shot
  G.push('all');G.setShader();G.setColor(1,1,1,1)
  G.setBlendMode('alpha','premultiplied')
- local Renderer=require('src.render.Renderer')
- if Renderer.drawWorldOverride then
-  Renderer.drawWorldOverride(shot.canvas,0,0,winW/shot.pw,winH/shot.ph)
- elseif Renderer.mirrorsWorldOverride and Renderer.mirrorsWorldOverride()then
-  G.draw(shot.canvas,0,winH,0,winW/shot.pw,-winH/shot.ph)
- else G.draw(shot.canvas,0,0,0,winW/shot.pw,winH/shot.ph)end
+ V.require('CanvasOrientation').draw(shot.canvas,0,0,winW/shot.pw,winH/shot.ph)
  G.setBlendMode('alpha')
  local good,err=pcall(function()
   e.hud=V.require('GoldBattleHud').draw(s,e,shot,winW,winH,capture)

@@ -1,0 +1,7 @@
+# Mod-owned iOS canvas orientation
+
+Authored release 1.0.16 handles its own final canvas orientation in CanvasOrientation.lua. The voxel World.draw wrapper and GoldBattle compositor call it directly. Neither requires Renderer.drawWorldOverride, Renderer.withWorldOverrideMirror or any patched engine files. The mod draws its own replacement world and returns before the native engine world composite, avoiding a second correction on engines that also have orientation helpers.
+
+The iOS/LÖVE 12 policy matches the existing Gen 1 renderer convention: translate the final canvas by its scaled height and use a negative Y scale exactly once. iOS/LÖVE 11, desktop and Android retain positive scales. Projected Gen 2 emote FX receive the matching raw-target transform before final composition so anchor and glyph orientation agree. UI/HUD draws remain outside that transform.
+
+Tests/test_canvas_orientation.lua covers OS/version policy, nonzero origin, independent scales/HiDPI, raw FX transform order, error restoration, no target and Android normal orientation. The workspace gen5_battle_sprite_live.lua probe with VOXEL_LEGACY_ORIENTATION=1 removes the engine orientation helpers in the test process and verifies that real overworld and battle draws reach the mod helper. This is a desktop integration test; physical iOS hardware remains unverified. No engine source modification is required or included in the ZIP.

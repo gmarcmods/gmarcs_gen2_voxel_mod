@@ -36,7 +36,4 @@ Focused tests cover configuration, provider behavior and billboard sizing:
 extracted packs are included in mod ZIPs. Physical iOS/Android and all species
 have not been exhaustively visually tested.
 
-The battle compositor also follows the engine's iOS vertical correction. The
-Gen 2 overworld correction lives in gen1recomp, so that part needs an engine
-update. It is regression-tested against the existing iOS/LÖVE 12 policy, not
-verified on an actual iOS device. Authored voxel profiles are unchanged.
+World and battle canvas orientation are owned by the mod as of 1.0.16. No patched engine compositor is required. See [canvas-orientation.md](canvas-orientation.md). The iOS/LÖVE 12 transform is regression-tested, but not yet verified on physical iOS hardware. Authored profiles are unchanged.

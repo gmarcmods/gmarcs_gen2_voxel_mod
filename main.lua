@@ -868,7 +868,7 @@ do
         end
         if override then
           love.graphics.setColor(1, 1, 1, 1)
-          love.graphics.draw(override, 0, 0, 0, ctx.presentScale, ctx.presentScale)
+          V.require("CanvasOrientation").draw(override, 0, 0, ctx.presentScale, ctx.presentScale)
           return
         end
       end
