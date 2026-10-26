@@ -24,26 +24,25 @@ function B.register(source,label,provider)
  end
  return true
 end
+local imported
 local function provider(source)
  if registered[source]then return registered[source]end
- if source~='gen5_bw' then return nil end
- if not(V.mod and V.mod.find)then return nil end
- local ok,h=pcall(V.mod.find,'GEN5_PRIVATE_SPRITES')
- local p=ok and h and h.exports
- return valid(p)and p or nil
+ if source~='gen5_bw'then return nil end
+ imported=imported or V.require('ImportedBattleSprites')
+ return imported
 end
 -- The provider's status uses the engine's validated imported-pack API; do
 -- not guess availability from ROM filenames or private cache paths.
 function B.unavailableReason()
  local p=provider('gen5_bw')
  if not p then
-  return 'Enable the Gen 5 sprite provider, then import your own supported Black / White ROM through IMPORTERS. Native sprites remain active.'
+  return 'Import your own supported Black / White ROM in gen1recomp Extras. Native sprites remain active.'
  end
  if type(p.status)=='function' then
   local ok,status=pcall(p.status,'gen5_bw')
   if ok and type(status)=='table' and status.ready then return nil end
  end
- return 'Import your own supported Black / White ROM through IMPORTERS in gen1recomp. No usable Black / White battle sprite pack is available; native sprites remain active.'
+ return 'Import your own supported Black / White ROM in gen1recomp Extras (IMPORTERS). No usable Black / White battle sprite pack is available; native sprites remain active.'
 end
 -- Keep the choice selectable so attempting it explains what is required in
 -- both configuration screens. Unknown saved values (including old B2W2)

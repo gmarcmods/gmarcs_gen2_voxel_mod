@@ -16,8 +16,15 @@
     "gen2"
   ],
   "dependencies": [],
-  "version": "1.0.14",
+  "version": "1.0.15",
   "entry": "main.lua",
   "profile": "content",
-  "github": "gmarcmods/gmarcs_gen2_voxel_mod"
+  "github": "gmarcmods/gmarcs_gen2_voxel_mod",
+  "optional_assets": [
+    {
+      "importer": "gen5_bw",
+      "pack": "battle_sprites",
+      "version": ">=1.0.0"
+    }
+  ]
 }

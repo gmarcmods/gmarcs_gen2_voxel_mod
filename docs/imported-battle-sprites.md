@@ -1,14 +1,11 @@
 # Imported battle sprite providers
 
 BTL SPRITES selects NATIVE (default) or BLACK/WHITE for the MAP/PLATFORMS
-3D battle modes. STADIUM models remain their own option. Install the code-only
-GEN5_PRIVATE_SPRITES companion and import your own supported Black / White ROM
-through the engine launcher IMPORTERS tab. Black 2 / White 2 is not supported;
-older saved `gen5_b2w2` choices resolve to NATIVE.
+3D battle modes. STADIUM models remain their own option. The voxel mod includes its own adapter for the engine’s imported Black / White asset pack. Import your supported ROM through Extras (IMPORTERS); a separate GEN5_PRIVATE_SPRITES mod is no longer required. Black 2 / White 2 is unsupported; old choices resolve to NATIVE.
 
 When a usable Black / White pack is unavailable, the configuration choice and
 OPTIONS value display an IMPORT ROM reminder. Configuration help explains the
-provider and launcher import requirements. Availability uses the provider's
+provider and launcher import requirements. Availability uses the bundled adapter's
 `status('gen5_bw')`, backed by the engine's validated asset-pack API. See
 [battle-sprite-imports.md](battle-sprite-imports.md).
 
