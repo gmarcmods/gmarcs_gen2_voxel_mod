@@ -1,4 +1,4 @@
-# gmarcs Gen 2 Voxel Mod
+# Gmarc's Gen 2 Voxel Mod
 
 3D voxel overworld for Gen 2 (Gold, Silver, Crystal).
 

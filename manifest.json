@@ -1,5 +1,5 @@
 {
-  "name": "gmarcs Gen 2 Voxel Mod",
+  "name": "Gmarc's Gen 2 Voxel Mod",
   "managed_by_editor": true,
   "optional_dependencies": [],
   "affects_link": false,
@@ -16,7 +16,7 @@
     "gen2"
   ],
   "dependencies": [],
-  "version": "1.0.16",
+  "version": "1.0.17",
   "entry": "main.lua",
   "profile": "content",
   "github": "gmarcmods/gmarcs_gen2_voxel_mod",
